@@ -34,8 +34,8 @@ def get_count(wildcards):
  
 rule all:
     input: 
-        expand("samples/{sample}_R1.fastq", sample = get_samples()),
-        expand("samples/{sample}_R2.fastq", sample = get_samples()) # rename in {sample}_L001_Rx_001.fastq?
+        expand("samples/{sample}_S1_L001_R1_001.fastq", sample = get_samples()),
+        expand("samples/{sample}_S1_L001_R2_001.fastq", sample = get_samples()) # rename in {sample}_L001_Rx_001.fastq?
 
 # Workflow ------------------------------------------------------------------------------------------------------------------
 
@@ -107,8 +107,8 @@ rule mix_reads:
         r1 = get_R1_names,
         r2 = get_R2_names
     output:
-        r1 = "samples/{sample}_R1.fastq",
-        r2 = "samples/{sample}_R2.fastq"
+        r1 = "samples/{sample}_S1_L001_R1_001.fastq",
+        r2 = "samples/{sample}_S1_L001_R2_001.fastq"
     message: "Combining reads for sample {wildcards.sample}"
     shell:
         """
