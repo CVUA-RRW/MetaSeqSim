@@ -14,10 +14,6 @@ ssheet = pd.read_csv(config["samples"], index_col=None, sep = "\t", engine="pyth
 def get_samples():
     return [str(e) for e in ssheet['sample'].unique()]
 
-# def get_taxids(ssheet, sample):
-    # taxids = ssheet[ssheet["sample"]=='bos_test_equi']["taxid"]
-    # return ["fastq/" + wildcards + "_" + txd + "_R1.fq" for txd in taxids]
-    
 def get_R1_names(wildcards):
     taxids = ssheet[ssheet["sample"] == wildcards.sample]["taxid"]
     return ["fastq/" + wildcards.sample + "_" + str(txd) + "_R1.fq" for txd in taxids]
@@ -34,8 +30,7 @@ def get_count(wildcards):
  
 rule all:
     input: 
-        expand("samples/{sample}_S1_L001_R1_001.fastq", sample = get_samples()),
-        expand("samples/{sample}_S1_L001_R2_001.fastq", sample = get_samples()) # rename in {sample}_L001_Rx_001.fastq?
+        expand("samples/{sample}_S1_L001_R{N}_001.fastq.gz", sample = get_samples(), N = [1, 2])
 
 # Workflow ------------------------------------------------------------------------------------------------------------------
 
@@ -107,11 +102,22 @@ rule mix_reads:
         r1 = get_R1_names,
         r2 = get_R2_names
     output:
-        r1 = "samples/{sample}_S1_L001_R1_001.fastq",
-        r2 = "samples/{sample}_S1_L001_R2_001.fastq"
+        r1 = temp("samples/{sample}_S1_L001_R1_001.fastq"),
+        r2 = temp("samples/{sample}_S1_L001_R2_001.fastq")
     message: "Combining reads for sample {wildcards.sample}"
     shell:
         """
         cat {input.r1} > {output.r1}
         cat {input.r2} > {output.r2}
+        """
+        
+rule compress:
+    input:
+        "samples/{sample}_S1_L001_R{N}_001.fastq"
+    output:
+        "samples/{sample}_S1_L001_R{N}_001.fastq.gz"
+    message: "Compressing file {wildcards.sample}_S1_L001_R{wildcards.N}_001.fastq"
+    shell:
+        """
+        gzip -c {input} > {output} 
         """

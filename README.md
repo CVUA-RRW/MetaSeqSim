@@ -55,12 +55,22 @@ Consult [snakemake's documentation](https://snakemake.readthedocs.io/en/stable/)
 
 ### Sample composition
 
-You can enter the sample composition in a tabular file (see the input_example file in the repo).
-Enter one line per species, repeating the sample name to combine speices in the same sample.
+You can enter the sample composition in a tabular file, as shown below.
+Enter one line per species, repeating the sample name to combine species in the same sample.
 Species are to be provided with their **taxonomic node number** according to the NCBI's 
 taxonomic classififcation.
 
 Note the the read count values affects both reads: a value of 10000 will generate 10000 R1 reads and 10000 R2 reads.
+
+| Sample  | taxid | read_count |
+| ------- | ----- | ---------- |
+| sample1 | 9913  | 250000     |
+| sample1 | 9903  | 100000     |
+| sample1 | 9906  | 200        |
+| sample2 | 9906  | 500000     |
+| sample2 | 9923  | 500        |
+
+**Be sure to use tabulations as field separator and to respect column naming!**
 
 ### Configuration file
 
@@ -97,8 +107,8 @@ Accepted values for seq_system are :
 
 The Pipeline will produce two files per samples, following the illumina naming convention:
 
-* <sample_name>_S1_L001_R1_001.fastq
-* <sample_name>_S1_L001_R2_001.fastq
+* <sample_name>_S1_L001_R1_001.fastq.gz
+* <sample_name>_S1_L001_R2_001.fastq.gz
 
 The refenrece sequences that were used to genrate these files will also be outputed 
 in individual fasta files for inspection.
