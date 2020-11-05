@@ -62,7 +62,7 @@ taxonomic classififcation.
 
 Note the the read count values affects both reads: a value of 10000 will generate 10000 R1 reads and 10000 R2 reads.
 
-| Sample  | taxid | read_count |
+| sample  | taxid | read_count |
 | ------- | ----- | ---------- |
 | sample1 | 9913  | 250000     |
 | sample1 | 9903  | 100000     |
@@ -110,7 +110,7 @@ The Pipeline will produce two files per samples, following the illumina naming c
 * <sample_name>_S1_L001_R1_001.fastq.gz
 * <sample_name>_S1_L001_R2_001.fastq.gz
 
-The refenrece sequences that were used to genrate these files will also be outputed 
+The reference sequences that were used to genrate these files will also be outputed 
 in individual fasta files for inspection.
 
 ## Credits
