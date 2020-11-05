@@ -25,6 +25,12 @@ def get_R2_names(wildcards):
 def get_count(wildcards):
     sub_df = ssheet[ssheet["sample"] == wildcards.sample]
     return int(sub_df[sub_df["taxid"] == int(wildcards.taxid)]["read_count"])
+    
+def get_sim_args(wildcards):
+    if any([config["quality_profile_read1"] == "None", config["quality_profile_read2"] == None]):
+        return "--seqSys " + config["seq_system"]
+    else:
+        return "--qprof1 "+ config["quality_profile_read1"] + " --qprof2 " + config["quality_profile_read2"]
 
 # Input rule ----------------------------------------------------------------------------------------------------------------
  
@@ -65,7 +71,7 @@ rule generate_reads:
         mflen = config["mean_fragment_size"],
         qshift2 = config["quality_shift_R2"],
         sdev = config["fragment_size_sdev"],
-        seqSys = config["seq_system"]
+        simargs = get_sim_args
     message: "Generating taxid {wildcards.taxid} reads for samples {wildcards.sample}"
     conda: "envs/art.yaml"
     shell:
@@ -94,7 +100,7 @@ rule generate_reads:
                      --paired \
                      --qShift2 {params.qshift2} \
                      --sdev {params.sdev} \
-                     --seqSys {params.seqSys}
+                     {params.simargs}
         """
 
 rule mix_reads:

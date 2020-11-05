@@ -86,9 +86,11 @@ samples:                    # Path to the sample definition table
 # Modify the parameters below:
 read_length: 150            # Sequencing read length
 mean_fragment_size: 151     # Mean DNA fragment size. Must be > than read_length
-quality_shift_R2: -2        # Quality shift of read 2
+quality_shift_R2: 0        # Quality shift of read 2
 fragment_size_sdev: 0       # Standard deviation of fragment size
-seq_system: MSv3            # Sequencing system
+seq_system: MSv3            # Sequencing system, ignored if providing custom profiles
+quality_profile_read1: None # Custom quality profile for read1
+quality_profile_read2: None # Custom quality profile for read2
 ```
 
 If the reference sequence is shorter than the provided read_length and mean_fragment_length, these will be
@@ -102,8 +104,29 @@ Accepted values for seq_system are :
   HSXn - HiSeqX PCR free (150bp),     HSXt - HiSeqX TruSeq (150bp),   MinS - MiniSeq TruSeq (50bp)
   MSv1 - MiSeq v1 (250bp),            MSv3 - MiSeq v3 (250bp),        NS50 - NextSeq500 v2 (75bp)
 ```
+## Custom quality profiles
 
-### Output
+It is better to use custom quality profiles rather than the buit-in ones.
+You can create such profiles based on previous sequencing runs by directly using the built-in 
+ART command `art_profiler_illumina`.
+
+Alternatively you can use the convenience script `scripts/create_error_profile.sh` 
+of this repo. The script will take care of renaming your sequencing files to match 
+the requirements of ART.
+
+Use it as follows:
+
+```
+conda create --name ART art
+conda activate ART
+
+bash /path/to/MetaSeqSim/scripts/create_error_profile.sh -o /path/to/out/dir -f /path/to/sequencing_dir -o PROFILE_NAME_
+```
+
+This will create two files named PROFILE_NAME_R1.txt and PROFILE_NAME_R2.txt that you can 
+for the quality_profile parameters in the config file.
+
+## Output
 
 The Pipeline will produce two files per samples, following the illumina naming convention:
 
